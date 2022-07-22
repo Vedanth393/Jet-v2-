@@ -1,128 +1,141 @@
-var bgImg, bg
-var jet, jetImg
-var enemyJet,enemyjetImg
-var enemyjetGroup
-var heart1, heart2, heart3
-var heart1Img, heart2Img, heart3Img
-var life=3;
-var gameState = "fight"
-var PLAY,END;
-var gameover
-var gameoverImg
+
+const Engine = Matter.Engine;
+const World = Matter.World;
+const Bodies = Matter.Bodies;
+const Body = Matter.Body;
+
+var bgImg;
+var button,button2,button3,button4,button5,button6,button7,button8,button9,button10;
+var explosion,explosionImg;
+var score=0
 
 function preload(){
-bgImg = loadImage("Sky.png")
-jetImg = loadImage("jet.png")
-enemyjetImg = loadImage("enemyJet.png")
+  bgImg = loadImage("brickbuilding.jpg")
 
-heart1Img = loadImage("heart_1.png")
-  heart2Img = loadImage("heart_2.png")
-  heart3Img = loadImage("heart_3.png")
-  gameoverImg = loadImage("Gameover.jpg");
+  explosionImg = loadAnimation("explosion1.png","explosion2.jpg","explosion3.jpg","explosion4.jpg","explosion5.jpg","explosion6.jpg","explosion7.jpg")
+
+  explosion.playing=true
+  explosion.loop = false
 }
+
 
 function setup() {
- createCanvas(windowWidth,windowHeight);
- 
-  bg = createSprite(displayWidth/2-20,displayHeight/2-40,20,20)
-  bg.addImage(bgImg)
-  bg.scale = 5
+  createCanvas(800,700);
 
-  jet = createSprite(displayWidth-1150, displayHeight-300, 50, 50);
- jet.addImage(jetImg)
-   jet.scale = 0.3
-   jet.debug = true
-   jet.setCollider("rectangle",0,0,300,300)
+  engine = Engine.create();
+  world = engine.world;
 
-   heart1 = createSprite(displayWidth-150,40,20,20)
-   heart1.visible = false
-    heart1.addImage("heart1",heart1Img)
-    heart1.scale = 0.4
+  button = createImg('red_button.jpg')
+  button.position(20,400)
+  button.size(50,50)
+button.mouseClicked(good_button)
 
-    heart2 = createSprite(displayWidth-100,40,20,20)
-    heart2.visible = false
-    heart2.addImage("heart2",heart2Img)
-    heart2.scale = 0.4
+  button2 = createImg('red_button.jpg')
+  button2.position(100,400)
+  button2.size(50,50)
+ button2.mouseClicked(good_button2)
 
-    heart3 = createSprite(displayWidth-150,40,20,20)
-    heart3.addImage("heart3",heart3Img)
-    heart3.scale = 0.4
-   
-enemyjetGroup = new Group()
-}
+  button3 = createImg('red_button.jpg')
+  button3.position(180,400)
+  button3.size(50,50)
+  button3.mouseClicked(good_button3)
 
-function draw() {
-  background(0);
+  button4 = createImg('red_button.jpg')
+  button4.position(260,400)
+  button4.size(50,50)
+button4.mouseClicked(bad_button)
+
+  button5 = createImg('red_button.jpg')
+  button5.position(340,400)
+  button5.size(50,50)
+button5.mouseClicked(good_button4)
+
+  button6 = createImg('red_button.jpg')
+  button6.position(420,400)
+  button6.size(50,50)
+button6.mouseClicked(good_button5)
+
+  button7 = createImg('red_button.jpg')
+  button7.position(500,400)
+  button7.size(50,50)
+  button7.mouseClicked(good_button8)
   
-  if( gameState === "fight"){
+  button8 = createImg('red_button.jpg')
+  button8.position(580,400)
+  button8.size(50,50)
+button8.mouseClicked(good_button6)
 
-    if(life ===3){
+  button9 = createImg('red_button.jpg')
+  button9.position(660,400)
+  button9.size(50,50)
+button9.mouseClicked(good_button7)
 
-      heart3.visible = true
-      heart2.visible =false
-      heart1.visible = false
-    }
-
-if(life===2){
-  heart3.visible = false
-  heart2.visible = true
-heart1.visible = false
-}
-    if(life===1){
-      heart3.visible = false
-      heart2.visible = false
-      heart1.visible = true
-    }
-
-    if(life===0){
-      gameState='lost'
-      heart3.visible = false
-      heart2.visible = false 
-      heart1.visible = false
-      gameover = createSprite(displayWidth/2-20,displayHeight/2-40,20,20)
-gameover.addImage(gameoverImg);
-enemyJet.destroy()
-jet.destroy()
-    }
-  }
-  if(keyDown("UP_ARROW")||touches.length>0){
-    jet.y = jet.y-30
-  }
-  if(keyDown("DOWN_ARROW")||touches.length>0){
-   jet.y = jet.y+30
-  }
-  if(enemyjetGroup.isTouching(jet)){
- 
-
-
-    for(var i=0;i<enemyjetGroup.length;i++){     
-         
-     if(enemyjetGroup[i].isTouching(jet)){
-      enemyjetGroup[i].destroy()
-          life = life -1
-          
-   
-          } 
-    }
-  }
-  drawSprites();
-  enemy();
+  button10 = createImg('red_button.jpg')
+  button10.position(740,400)
+  button10.size(50,50)
+  button10.mouseClicked(bad_button2)
 }
 
-function enemy(){
-  if(frameCount%50===0){
 
-    //giving random x and y positions for zombie to appear
-    enemyJet = createSprite(random(500,1100),random(100,500),40,40)
+function draw() 
+{
+  background(51);
+  image(bgImg,0,0,width,height)
+  
+  text("Score: "+ score,750,25)
 
-    enemyJet.addImage(enemyjetImg)
-    enemyJet.scale = 0.3
-    enemyJet.velocityX = -3
-    enemyJet.debug= true
-    enemyJet.setCollider("rectangle",0,0,400,400)
-   
-    enemyJet.lifetime = 400
-   enemyjetGroup.add(enemyJet)
-  }
+  Engine.update(engine);
+  
+  drawSprites()
+}
 
+function good_button(){
+  score+=1
+ button.remove()
+ }
+
+ function good_button2(){
+   score+=1
+   button2.remove()
+ }
+
+ function good_button3(){
+   score+=1
+   button3.remove()
+ }
+
+ function bad_button(){
+   explosion.addAnimation(explosionImg);
+   button4.remove()
+ }
+
+ function good_button4(){
+  score+=1
+  button5.remove()
+}
+
+function good_button5(){
+  score+=1
+  button6.remove()
+}
+
+function good_button6(){
+  score+=1
+  button8.remove()
+}
+
+function good_button7(){
+  score+=1
+  button9.remove()
+
+}
+
+function good_button8(){
+  score+=1
+  button7.remove()
+}
+
+function bad_button2(){
+  explosion.addAnimation(explosionImg);
+  button10.remove()
 }
